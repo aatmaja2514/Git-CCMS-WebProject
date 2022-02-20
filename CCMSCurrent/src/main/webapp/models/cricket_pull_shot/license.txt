@@ -1,0 +1,11 @@
+Model Information:
+* title:	Cricket Pull shot
+* source:	https://sketchfab.com/3d-models/cricket-pull-shot-5695f34a27524587b7fd8014e8ee8546
+* author:	Andy woodhead (https://sketchfab.com/Andywoodhead)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Cricket Pull shot" (https://sketchfab.com/3d-models/cricket-pull-shot-5695f34a27524587b7fd8014e8ee8546) by Andy woodhead (https://sketchfab.com/Andywoodhead) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
