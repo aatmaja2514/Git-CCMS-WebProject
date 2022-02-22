@@ -17,9 +17,7 @@ Class.forName("com.mysql.cj.jdbc.Driver");
 Connection con = DriverManager.getConnection(url, user, pwd);
 
 String session_Club_Id = session.getAttribute("Club_Id").toString();
-
 int flag = 0;
-
 try 
 {
     String challenge_club = request.getParameter("challenge_club");
@@ -42,22 +40,15 @@ try
     ResultSet rs = stg2.executeQuery("Select * FROM challenge");
     while(rs.next())
     {
-    	System.out.println("1111");
-    	//response.getWriter().println("11111");
         if (rs.getString(3).equals(session_Club_Id) && rs.getString(4).equals(challenge_club) && rs.getString(6).equals(challenge_date) && rs.getString(7).equals(time) && rs.getString(9).equals("Ongoing"))
         {
-        	System.out.println("2222");
-        	//response.getWriter().println("22222");
             if (rs.getString(8).equals("Unapproved")) 
             {
-            	//response.getWriter().println("hi");
                 %>
                 <script>
-                    alert("You have already challenged the other club on this date and time");
+                    alert("You have already challenged the other club on this date and time. Wait for approval.");
                 </script>
                 <%
-                System.out.println("3333");
-                //response.sendRedirect("challenge.jsp?msg=unapproveerror");
                 flag = 1;
                 break;
             } 
@@ -68,7 +59,6 @@ try
                     alert("The match is already scheduled!");
                 </script>
                 <%
-                //response.sendRedirect("challenge.jsp?msg=approveerror");
                 flag = 1;
                 break;
             }
@@ -80,10 +70,8 @@ try
     	response.sendRedirect("challenge.jsp");
     }
     
-    else 
-        {
-        	System.out.println("444");
-        	//response.getWriter().println("33333");
+    else if(flag==0) 
+    {
         	Statement stg3 = con.createStatement();
             ResultSet rs1 = stg3.executeQuery("SELECT Venue_Id,Venue_Name,Venue_Address FROM venue WHERE Venue_Id = (SELECT Venue_Id FROM clubs WHERE Club_Id = '"+ session_Club_Id + "')");
             if (rs1.next())
@@ -107,12 +95,10 @@ try
                 auto_inc.executeUpdate(ai);
                 
                 
-                //response.getWriter().println("abccc");
                 Statement stg4 = con.createStatement();
-                ResultSet rs2 = stg4.executeQuery("SELECT Challenge_Id,Challenge_Date , Challenge_Time FROM challenge");
+                ResultSet rs2 = stg4.executeQuery("SELECT Challenge_Id, Challenge_Date, Challenge_Time FROM challenge");
                 while (rs2.next()) 
                 {
-                	//response.getWriter().println(rs2.getString(1));
                     String datetime = rs2.getString(2).concat(" ").concat(rs2.getString(3));
                     
                     SimpleDateFormat sdformat = new SimpleDateFormat("E, MMM dd yyyy h:mm a");
@@ -125,16 +111,12 @@ try
     
                     if (d2.compareTo(current_date) > 0 || (d2.compareTo(current_date) == 0))
                     {
-                    	//response.getWriter().println("xyz");
-                    	//response.getWriter().println(rs2.getString(1));
                     	Statement stg1 = con.createStatement();
                         stg1.executeUpdate("UPDATE challenge SET match_status = 'Ongoing' WHERE Challenge_Id = '" + rs2.getString(1) + "'");
-                       // response.getWriter().println(rs2.getString(1));
-                        
+                      
                     } 
                     else if (d2.compareTo(current_date) < 0) 
                     {
-                    	//response.getWriter().println("pqr");
                     	Statement stg5 = con.createStatement();
                         stg5.executeUpdate("UPDATE challenge SET match_status = 'Finished' WHERE Challenge_Id = '" + rs2.getString(1) + "'");
                     }   
@@ -148,8 +130,9 @@ try
     
                     String club_name = rs3.getString(1);
                     Statement stg7 = con.createStatement();
-                    ResultSet rs4 = stg7.executeQuery("SELECT Challenge_Id FROM challenge WHERE ch_club = '" + session_Club_Id + "' AND opp_club = '" + challenge_club + "' AND match_status = 'Ongoing' ");
-                    //response.getWriter().println("sbuibc");
+                    
+                    ResultSet rs4 = stg7.executeQuery("SELECT Challenge_Id FROM challenge WHERE ch_club = '" + session_Club_Id + "' AND opp_club = '" + challenge_club + "' AND Venue_Id = '" + venue_id + "' AND Challenge_Date = '" + challenge_date + "' AND Challenge_Time = '" + time + "' AND match_status = 'Ongoing' ");
+                   
                     if (rs4.next()) 
                     {
                         String challenge_Id = rs4.getString(1);
@@ -194,9 +177,7 @@ try
             }
             response.sendRedirect("coach_notifications.jsp");
         }
-        
-     
-    
+  
 }
 catch (Exception e)
 {

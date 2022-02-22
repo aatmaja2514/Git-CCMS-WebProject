@@ -50,7 +50,7 @@ $(function(){
           <!-- <li><a class="nav-link scrollto" href="#admin">Admin</a></li> -->
 
           <!-- <li class="nav-link scrollto"><a href="#"><span>Log In as</span> <i class="bi bi-chevron-down"></i></a> -->
-            <ul>
+           <ul>
               <li class="nav-link scrollto dropdown"><a href="#"><span>Log In as</span> <i class="bi bi-chevron-down"></i></a>
                 <ul>
                   <li><a href="#">Coach</a></li>
@@ -60,7 +60,7 @@ $(function(){
                 </ul>
               </li>
               
-            </ul>
+           </ul>
           
 
         </ul>        
@@ -163,7 +163,7 @@ $(function(){
           </div>
           <div class="col-lg-4 col-md-6 service-item">
             <div class="service-icon"><i class="bi bi-calendar4-week"></i></div>
-            <h4 class="service-title"><a href="">servi6/a></h4>
+            <h4 class="service-title"><a href="">servi6</a></h4>
             <p class="service-description">tgrhfdgb</p>
           </div>
         </div>

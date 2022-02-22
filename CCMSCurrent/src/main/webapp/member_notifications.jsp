@@ -41,6 +41,8 @@
 	String session_Club_Id = session.getAttribute("Club_Id").toString();
 	String mem_email = session.getAttribute("Email").toString();
 	int flag = 0;
+	String date_time = "";
+	String venue = "";
   %>
     <header id="coach-header" class="d-flex align-items-center">
       <!-- <div class="container d-flex align-items-center justify-content-between">  -->
@@ -63,13 +65,13 @@
          
                 
                 <!-- <li class="active"><a href=""><i class="bi bi-clipboard-data"></i>Dashboard</a></li> -->
-                <li class="active"><a href=""><i class="bi bi-bell-fill"></i>Notifications</a></li>
-                <li><a href=""><i class="bi bi-clipboard-check"></i>Club Coach</a></li>
-                <li><a href="all_mmembers.html"><i class="bi bi-people-fill"></i>Club Members</a></li>
-                <li><a href=""><i class="bi bi-person-check-fill"></i>Team</a></li>
-                <li><a href="cart.html"><i class="bi bi-cart3"></i>My Cart</a></li>
-                <!-- <li><a href=""><i class="bi bi-clock-fill"></i>Practise Session</a></li> -->
-                <li><a href=""><i class="bi bi-person-circle"></i>Edit My Profile</a></li>
+                <li class="active"><a href="member_notifications.jsp"><i class="bi bi-bell-fill"></i>Notifications</a></li>
+                <li><a href="member_coach_profile.jsp"><i class="bi bi-clipboard-check"></i>Club Coach</a></li>
+                <li><a href="all_mmembers.jsp"><i class="bi bi-people-fill"></i>Club Members</a></li>
+                <li><a href="all_mteam.jsp"><i class="bi bi-person-check-fill"></i>Team</a></li>
+                <!--<li><a href="cart.html"><i class="bi bi-cart3"></i>My Cart</a></li>
+                 <li><a href=""><i class="bi bi-clock-fill"></i>Practise Session</a></li> -->
+                <li><a href="member_profile.jsp"><i class="bi bi-person-circle"></i>Edit My Profile</a></li>
             </ul>
        </div>
 
@@ -127,23 +129,70 @@
 	        			      	  	{
 	        			      	  		while(rs.next())
 	        			      	  		{
-		        			      	  		%>
-		        	                          <tr>
-		        	                            <th scope="row"><%= i++ %></th>
-		        	                            <td><%= rs.getString(3) %></td>
-		        	                            <td><%= rs.getString(4) %></td>
-		        	                            <td><%= rs.getString(5) %></td>
-		        	                            <%
-		        	                            if(rs.getString(6).equals("match"))
-							                     {
-		        	                            %>
-		        	                            <td><button type="submit"><a href = "approve_challenge_team.jsp?member_id=<%= rs2.getString(1) %>"><i class="bi bi-check"></i> Accept</a></button></td>
-							                    <td><button type="submit"><a href = "approve_challenge_team.jsp?member_id=<%= rs2.getString(1) %>"><i class="bi bi-x"></i> Reject</a></button></td>
-							                    <%}%>
-		        	                          </tr>
-		        	                        
-		        	                       
-		        	                      <%
+	        			      	  			if(!rs.getString(7).equals("")){
+			        			      	  		Statement st6 = con.createStatement();
+		                		      	  		ResultSet rs6= st6.executeQuery("Select Venue_id, Challenge_Date, Challenge_Time FROM challenge WHERE Challenge_Id = '"+ rs.getString(7) +"'");
+			        			      	  		if(rs6.next()){
+				        			      	  		date_time = " on " + rs6.getString(2) + ", " + rs6.getString(3);
+				        			      	  		
+				        			      	  		Statement st9 = con.createStatement();
+		                		      	  			ResultSet rs9= st9.executeQuery("SELECT Venue_Name, Venue_Address FROM venue WHERE Venue_Id = '"+ rs6.getString(1) +"'");
+		                		      	  			rs9.next();
+		                		      	  			venue = " at " + rs9.getString(2) + ", " + rs6.getString(2);
+			        			      	  		}
+	        			      	  			}
+	        			      	  			
+                		      	  			Statement st3 = con.createStatement();
+	                		      	  		ResultSet rs3= st3.executeQuery("Select Email FROM member WHERE Member_Id = (SELECT Member_Id FROM team WHERE Club_Id='"+ session_Club_Id +"')");
+	                		      	  		int flag00 = 0;
+	                		      	  		while(rs3.next()){
+	                		      	  			if(rs3.getString(1).equals(mem_email)){
+	                		      	  				flag00 = 1;
+	                		      	  			}
+	                		      	  		}
+	                		      	  		if(flag00 == 1)
+	                		      	  		{
+		                		      	  		%>
+			        	                          <tr>
+			        	                            <th scope="row"><%= i++ %></th>
+			        	                            <td><%= rs.getString(3) + date_time + venue%></td>
+			        	                            <td><%= rs.getString(4) %></td>
+			        	                            <td><%= rs.getString(5) %></td>
+			        	                            <%
+			        	                            if(rs.getString(6).equals("match"))
+								                     {
+				        	                            %>
+				        	                            <td>You have approved for this match.</td>
+									                    <td></td>
+									                    <%
+								                    }
+								                    %>
+			        	                          </tr>
+			        	                        
+			        	                       
+			        	                      	<%
+	                		      	  		}
+	                		      	  		else
+	                		      	  		{
+			        			      	  		%>
+			        	                          <tr>
+			        	                            <th scope="row"><%= i++ %></th>
+			        	                            <td><%= rs.getString(3)+ date_time + venue %></td>
+			        	                            <td><%= rs.getString(4) %></td>
+			        	                            <td><%= rs.getString(5) %></td>
+			        	                            <%
+			        	                            if(rs.getString(6).equals("match"))
+								                     {
+			        	                            	
+			        	                            %>
+			        	                            <td><button type="submit"><a href = "team_approval.jsp?member_id=<%= rs2.getString(1) %>&status=approved"><i class="bi bi-check"></i> Accept</a></button></td>
+								                    <td><button type="submit"><a href = "team_approval.jsp?member_id=<%= rs2.getString(1) %>&status=disapproved"><i class="bi bi-x"></i> Reject</a></button></td>
+								                    <%}%>
+			        	                          </tr>
+			        	                        
+			        	                       
+			        	                      	<%
+	                		      	  		}
 	        			      	  		}
 	        	                    }
 	        	      		} 
@@ -161,10 +210,22 @@
 	        			      	  	{
 	        			      	  		while(rs.next())
 	        			      	  		{
+		        			      	  		if(!rs.getString(7).equals("")){
+			        			      	  		Statement st6 = con.createStatement();
+		                		      	  		ResultSet rs6= st6.executeQuery("Select Venue_id, Challenge_Date, Challenge_Time FROM challenge WHERE Challenge_Id = '"+ rs.getString(7) +"'");
+			        			      	  		if(rs6.next()){
+				        			      	  		date_time = " on " + rs6.getString(2) + ", " + rs6.getString(3);
+				        			      	  		
+				        			      	  		Statement st9 = con.createStatement();
+		                		      	  			ResultSet rs9= st9.executeQuery("SELECT Venue_Name, Venue_Address FROM venue WHERE Venue_Id = '"+ rs6.getString(1) +"'");
+		                		      	  			rs9.next();
+		                		      	  			venue = " at " + rs9.getString(2) + ", " + rs6.getString(2);
+			        			      	  		}
+	        			      	  			}
 		        			      	  		%>
 		        	                          <tr>
 		        	                            <th scope="row"><%= i++ %></th>
-		        	                            <td><%= rs.getString(3) %></td>
+		        	                            <td><%= rs.getString(3) + date_time + venue %></td>
 		        	                            <td><%= rs.getString(4) %></td>
 		        	                            <td><%= rs.getString(5) %></td>
 		        	                            <td></td>
@@ -187,46 +248,79 @@
         	 
                 </div>
             </div>
+            
+            <%
+            String status = "";
+            PreparedStatement st10 = con.prepareStatement("SELECT * FROM member WHERE Email = ?");
+            st10.setString(1, mem_email);
+            ResultSet rs10 = st10.executeQuery();
+            rs10.next();
+            %>
+            
             <div class="member-profile">
               <div class="divider"></div>
               <div class="title">My profile</div>
               <div class="divider"></div>
-              <div class="status">Status : Member</div>
+             
+              <%
+              if(rs10.getString(11).equals("M") || rs10.getString(11).equals("S")){
+            	  status = "Member";
+              }
+              else{
+            	  status = "Team";
+              }
+              %>
+              
+              <div class="status">Status : <%= status %></div>
               <div class="profile-image">
                 <img src="assets/images/player1.jpg" alt="" height="200" width="200">
               </div>
               
               <div class="details">
                 <dl class="row">
-
+				
+				<%
+				PreparedStatement st11 = con.prepareStatement("SELECT Club_Name FROM clubs WHERE Club_Id = ?");
+	            st11.setString(1, rs10.getString(8));
+	            ResultSet rs11 = st11.executeQuery();
+	            rs11.next();
+				%>
+				
                    <dt class="col-sm-4">Club</dt>
-                  <dd class="col-sm-6">ClubName</dd> 
+                  <dd class="col-sm-6"><%= rs11.getString(1) %></dd> 
 
                   <dt class="col-sm-4">Name</dt>
-                  <dd class="col-sm-6">name</dd>
+                  <dd class="col-sm-6"><%= rs10.getString(3) %></dd>
                 
                   <dt class="col-sm-4">Email Id</dt>
                   <dd class="col-sm-6">
-                    abc@gmail.com
-                    <!-- <p>Donec id elit non mi porta gravida at eget metus.</p> -->
+                    <%= rs10.getString(4) %>
                   </dd>
                 
                   <dt class="col-sm-4">Contact</dt>
-                  <dd class="col-sm-6">9876567890</dd>
+                  <dd class="col-sm-6"><%= rs10.getString(5) %></dd>
 
                   <dt class="col-sm-4">Age</dt>
-                  <dd class="col-sm-6">17 yrs</dd>
+                  <dd class="col-sm-6"><%= rs10.getString(6) %></dd>
 
                   <dt class="col-sm-4">Interest</dt>
-                  <dd class="col-sm-8">Batsman</dd>
-
+                  <dd class="col-sm-8"><%= rs10.getString(10) %></dd>
+				
+				
+					<%
+					PreparedStatement st12 = con.prepareStatement("SELECT Start_Time, End_Time FROM session WHERE Session_Id = ?");
+		            st12.setString(1, rs10.getString(9));
+		            ResultSet rs12 = st12.executeQuery();
+		            rs12.next();
+					%>
+					
                   <dt class="col-sm-4">Session</dt>
-                  <dd class="col-sm-8">ID - TIME</dd>
+                  <dd class="col-sm-8"><%= rs10.getString(9) + " - " + rs12.getString(1) +" to " + rs12.getString(2) %></dd>
 
                 </dl> 
 
                 <div class="edit-button">
-                  <button>Edit</button>
+                  <button onclick="window.location = 'member_profile.jsp'">Edit</button>
                 </div>
   
               </div>

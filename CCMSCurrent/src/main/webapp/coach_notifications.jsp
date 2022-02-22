@@ -69,7 +69,19 @@
                 <li><a href="all_cteam.jsp"><i class="bi bi-person-check-fill"></i>Team</a></li>
                 <li><a href="challenge.jsp"><i class="bi bi-bullseye"></i>Challenge</a></li>
                 <li><a href=""><i class="bi bi-clock-fill"></i>Practise Session</a></li>
-                <li><a href="coach_profile.jsp"><i class="bi bi-person-circle"></i>My Profile</a></li>
+                
+                
+                 <%
+                Statement ps1 = con.createStatement();
+                ResultSet rsps = ps1.executeQuery("SELECT COUNT(*) FROM session WHERE Club_Id = '" + session_Club_Id + "'");
+                if(rsps.next())
+                {
+                %>
+                <li><a href="coach_profile.jsp?count=<%= rsps.getInt(1) %>"><i class="bi bi-person-circle"></i>My Profile</a></li>
+                <% 
+                } 
+                %>
+                
           </ul>
 
     </div>
@@ -114,8 +126,8 @@
 
               	Statement st1 = con.createStatement();
 	      	  	ResultSet rs1 = st1.executeQuery("Select COUNT(*) FROM notifications_coach WHERE  Visibility = 'all' OR Visibility = '"+ session_Club_Id +"'");
-	      	  	if(rs1.next())
-	      	  	{
+	      	  	rs1.next();
+	      	  	
 		      	  	for(int i = 1; i <= rs1.getInt(1); i++)
 		      	  	{
 			      	  	while(rs.next())
@@ -124,12 +136,11 @@
 			          		{
 			          			if(!rs.getString(6).equals(""))
 			          			{
+			          				
 				          			Statement st2 = con.createStatement();
 				    	      	  	ResultSet rs2 = st2.executeQuery("Select Venue_Id, Challenge_Date, Challenge_Time,match_status FROM challenge WHERE Challenge_Id = '"+ rs.getString(6) +"'");
 				    	      	  	if(rs2.next())
 				    	      	  	{
-				    	      	  		
-
 					    	      	  	if(rs.getString(2).equals("challenge"))
 					          			{
 					    	      	  	Statement st3 = con.createStatement();
@@ -165,22 +176,23 @@
 					    	      	  	else if(rs.getString(2).equals(""))
 					    	      	  	{
 					    	      	  	
-					    	      	  	Statement st4 = con.createStatement();
-					    	      	  	ResultSet rs4 = st4.executeQuery("Select Venue_Name,Venue_Address FROM venue WHERE Venue_Id = '"+ rs2.getString(1) +"'");
-					    	      	  	if(rs4.next())
-					    	      	  	{
-					          			%>
-									         <tr>
-						                      <th scope="row"><%= i++ %></th>
-						                      <td><%= rs.getString(3) %> on <%= rs2.getString(2) %>, <%= rs2.getString(3) %> at <%= rs4.getString(1) %>, <%= rs4.getString(2) %> </td>
-						                      <td><%= rs.getString(4) %></td>
-						                      <td><%= rs.getString(5) %></td>
-						                      
-						                      <td></td>
-						                      <td></td>
-						                    </tr>
-					          				
-					          			<%}
+					    	      	  		Statement st4 = con.createStatement();
+					    	      	  		ResultSet rs4 = st4.executeQuery("Select Venue_Name,Venue_Address FROM venue WHERE Venue_Id = '"+ rs2.getString(1) +"'");
+						    	      	  	if(rs4.next())
+						    	      	  	{
+						          			%>
+										         <tr>
+							                      <th scope="row"><%= i++ %></th>
+							                      <td><%= rs.getString(3) %> on <%= rs2.getString(2) %>, <%= rs2.getString(3) %> at <%= rs4.getString(1) %>, <%= rs4.getString(2) %> </td>
+							                      <td><%= rs.getString(4) %></td>
+							                      <td><%= rs.getString(5) %></td>
+							                      
+							                      <td></td>
+							                      <td></td>
+							                    </tr>
+						          				
+						          			<%
+						          			}
 					    	      	  	}
 					    	      	  	
 					    	      	  else if(rs.getString(2).equals("rejected"))
@@ -202,12 +214,40 @@
 					    	      	  	}
 
 				    	      	  	}
+				    	      	  	
+				    	      	  else if(rs.getString(2).equals("team approval"))
+				    	      	  	{
+					          			%>
+								         <tr>
+					                      <th scope="row"><%= i++ %></th>
+					                      <td><%= rs.getString(3) %></td>
+					                      <td><%= rs.getString(4) %></td>
+					                      <td><%= rs.getString(5) %></td>
+					                      
+					                      <td></td>
+					                      <td></td>
+					                    </tr>
+				          				
+				          			<%
+				    	      	  	}
 			          			}
+			          			else if(rs.getString(2).equals("member session")){
+			          				%>
+							         <tr>
+				                      <th scope="row"><%= i++ %></th>
+				                      <td><%= rs.getString(3) %></td>
+				                      <td><%= rs.getString(4) %></td>
+				                      <td><%= rs.getString(5) %></td>
+				                      
+				                      <td></td>
+				                      <td></td>
+				                    </tr>
+			          				
+			          			<%
+			          			}
+			          			
 			          						          			
 			          		}
-			          		
-			          		
-			          		
 			          		
 			          		//for notification from coach and admin
 			          		 else if(rs.getString(6).equals(""))
@@ -236,7 +276,7 @@
 			          	}
 		      	  	}
 			              
-		      	 }
+		      	 
 	      	  	
 		      	  	
 	      	  	
@@ -288,9 +328,6 @@
 				            	  	//ResultSet rs2 = st2.executeQuery("Select Full_name, Interested_Status FROM member WHERE Club_Id = '" + session_Club_Id +"' AND Status = 'T' ");
 				            	  	ResultSet rs2 = st2.executeQuery("Select Full_name, Interested_Status FROM member WHERE Member_Id = '" + ab.getString(1) +"'");
 									
-				            	  	
-				            	  	
-				            	  		
 				            	  		if(rs2.next())
 									    { %>
 									    

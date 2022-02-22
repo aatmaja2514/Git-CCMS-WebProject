@@ -29,7 +29,7 @@
 <%
   	String url = "jdbc:mysql://localhost:3306/ccms";
 	String user = "root";
-	String pwd = "Aditya@27";
+	String pwd = "271879";
 	
 	Class.forName("com.mysql.cj.jdbc.Driver");
 	

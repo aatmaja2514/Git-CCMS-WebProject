@@ -18,8 +18,8 @@
  	
 	String session_Club_Id = session.getAttribute("Club_Id").toString();
 	
-
-	String accept_challengeid = request.getParameter("accept_challengeid");
+	String accept_challengeid = "";
+	accept_challengeid = request.getParameter("accept_challengeid");
 	String reject_challengeid = request.getParameter("reject_challengeid");
 	String noti_no = request.getParameter("noti_no");
 	try
@@ -59,7 +59,7 @@
   	                  
   	                  
   	               
-					String mem_noti_accept = "INSERT INTO notifications_members(Visibility,Description,Date,Time,Noti_Category) Values(?,?,?,?,?)";
+					String mem_noti_accept = "INSERT INTO notifications_members(Visibility,Description,Date,Time,Noti_Category, Challenge_Id) Values(?,?,?,?,?,?)";
   	          		
   	          		
   	        		Calendar cal3 = Calendar.getInstance();
@@ -76,11 +76,12 @@
   	                  pst3.setString(3, sdf.format(cal.getTime()));
   	                  pst3.setString(4, sdf1.format(cal.getTime()));
   	                  pst3.setString(5, "");
+  	               	  pst3.setString(6, accept_challengeid);
   	                  
   	                  pst3.executeUpdate();
   	                  
   	                  
- 					String team_noti_accept = "INSERT INTO notifications_team(Visibility,Description,Date,Time,Noti_Category) Values(?,?,?,?,?)";
+ 					String team_noti_accept = "INSERT INTO notifications_team(Visibility,Description,Date,Time,Noti_Category, Challenge_Id) Values(?,?,?,?,?,?)";
   	          		
   	        		Calendar cal4 = Calendar.getInstance();
   	        	    
@@ -96,14 +97,12 @@
   	                  pst4.setString(3, sdf.format(cal.getTime()));
   	                  pst4.setString(4, sdf1.format(cal.getTime()));
   	                  pst4.setString(5, "match");
+  	                  pst4.setString(5, accept_challengeid);
   	                  
   	                  pst4.executeUpdate();
   	                  
   	                 
-  	                  
-  	                  
-  	                  
-						String all_members = "INSERT INTO notifications_team(Visibility,Description,Date,Time,Noti_Category) Values(?,?,?,?,?)";
+						String all_members = "INSERT INTO notifications_team(Visibility,Description,Date,Time,Noti_Category, Challenge_Id) Values(?,?,?,?,?,?)";
 	  	          		
 	  	        		Calendar cal10 = Calendar.getInstance();
 	  	        	    
@@ -119,14 +118,12 @@
 	  	            	  pst10.setString(3, sdf.format(cal.getTime()));
 	  	          		  pst10.setString(4, sdf1.format(cal.getTime()));
 	  	        		  pst10.setString(5, "all");
+	  	        		  pst10.setString(6, accept_challengeid);
 	  	                  
 	  	      			  pst10.executeUpdate();
   	                  
   	                  
-  	                  
-  	                  
-  	                  
-					String opp_team_noti_accept = "INSERT INTO notifications_team(Visibility,Description,Date,Time,Noti_Category) Values(?,?,?,?,?)";
+					String opp_team_noti_accept = "INSERT INTO notifications_team(Visibility,Description,Date,Time,Noti_Category, Challenge_Id) Values(?,?,?,?,?,?)";
   	          		
   	        		Calendar cal6 = Calendar.getInstance();
   	        	    
@@ -142,6 +139,7 @@
   	                  pst5.setString(3, sdf.format(cal.getTime()));
   	                  pst5.setString(4, sdf1.format(cal.getTime()));
   	                  pst5.setString(5, "match");
+  	                  pst5.setString(6, accept_challengeid);
   	                  
   	                  pst5.executeUpdate();
   	                  
@@ -206,7 +204,7 @@
   	      		}
   	      		
   	      		Statement del_team = con.createStatement();
-  	      		del_team.executeUpdate("DELETE * FROM team WHERE Club_Id  = '" + rs.getString(2) + "' AND Club_Id  = '" + rs3.getString(2) + "'");
+  	      		del_team.executeUpdate("DELETE FROM team WHERE Club_Id  = '" + rs.getString(2) + "' OR Club_Id  = '" + rs3.getString(2) + "'");
   	      		
   	  		response.sendRedirect("coach_notifications.jsp");
   	  		

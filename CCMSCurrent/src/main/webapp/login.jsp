@@ -59,8 +59,7 @@
               <li class="nav-link scrollto dropdown"><a href="#"><span>Log In as</span> <i class="bi bi-chevron-down"></i></a>
                 <ul>
                   <li><a href="coach.jsp">Coach</a></li>
-                  <li><a href="#">Member</a></li>
-                  <li><a href="#">Team Member</a></li>
+                  <li><a href="#">Member/Team</a></li>
                   <li><a href="#">Administrator</a></li>
                 </ul>
               </li>
@@ -83,8 +82,7 @@
             <select name="role" id="role">
               <option value=""> Who are you ? </option>
               <option value="coach"> Coach </option>
-              <option value="member"> Member </option>
-              <option value="team">Team Member </option>
+              <option value="member_team"> Member/Team Member </option>
               <option value="admin"> Administrator </option>
             </select>
           </div>
@@ -156,31 +154,8 @@
 						 <%}
 						 
 					}
-					else if(cmta.equals("member"))
+					else if(cmta.equals("member_team"))
 					{
-						 String check_login = "Select Club_Id,Email,Password from member where Email = ? AND Password = ? AND Status = 'M'";
-						 PreparedStatement pst1 = con.prepareStatement(check_login);
-						 pst1.setString(1, email);
-						 pst1.setString(2, password);
-						 ResultSet rs1 = pst1.executeQuery();
-						 
-						 if(rs1.next())
-						 {
-							 session.setAttribute("Email",email);
-							 session.setAttribute("Club_Id",rs1.getString(1));
-							 response.sendRedirect("member_notifications.jsp");
-						 }
-						 else
-						 {%>
-							<script>
-                document.getElementById("login-error").innerHTML = "Invalid Credentials.";
-                </script>
-						 <%}
-						
-					}
-					else if(cmta.equals("team"))
-					{
-						
 						 String check_login = "Select Club_Id,Email,Password from member where Email = ? AND Password = ?";
 						 PreparedStatement pst1 = con.prepareStatement(check_login);
 						 pst1.setString(1, email);
@@ -199,7 +174,9 @@
                 document.getElementById("login-error").innerHTML = "Invalid Credentials.";
                 </script>
 						 <%}
+						
 					}
+
 					else if(cmta.equals("admin"))
 					{
 

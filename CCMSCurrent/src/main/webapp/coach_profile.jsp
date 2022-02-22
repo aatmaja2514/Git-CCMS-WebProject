@@ -2,6 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page import="java.sql.*"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,6 +17,7 @@
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
@@ -25,8 +27,8 @@
 </head>
 
 <body>
-<%
-//current
+	<%
+	//current
   	String url = "jdbc:mysql://localhost:3306/ccms";
 	String user = "root";
 	String pwd = "271879";
@@ -36,7 +38,7 @@
 	Connection con = DriverManager.getConnection(url, user, pwd);
 	String session_Email_Id = session.getAttribute("Email").toString();
 	String session_Club_Id = session.getAttribute("Club_Id").toString();
-  %>
+ 	 %>
 
     <header id="coach-header" class="d-flex align-items-center">
       <!-- <div class="container d-flex align-items-center justify-content-between">  -->
@@ -91,13 +93,11 @@
             	{
             		Statement a = con.createStatement();
                 	ResultSet ab = a.executeQuery("SELECT Club_Name FROM clubs WHERE Club_Id = '" + cn.getString(1) + "'");
-                	if(ab.next())
-                	{
-                		
+                	ab.next();
                 	
             %><h5>Head Coach of <%= ab.getString(1) %></h5>
               <!-- <input name = "club_name" type="text" class="form-control" id="club_name"  value = "" readonly> -->
-              <%}} %>
+              <%} %>
             	
             </div>
             <a>Change profile photo</a>
@@ -236,23 +236,132 @@ if(rs1.next())
         	  System.out.println(e);
           }
  
-}
+		
           %>
         
     
         </div>
         <!-- profile-form -->
-
-      
-      <div class="title2">
-        <div class="divider"></div>
-        <h4> Practise sessions</h4>
-      </div>
-
-      <div class="save-btn">
+        <div class="save-btn">
         <button type="submit">Update</button>
       </div>
     </form>
+
+      <div class="title2">
+        <div class="divider"></div>
+        <h4> Practice sessions</h4>
+        <h4> Team & Member</h4>
+        
+        <form id="addremove-form" method="POST">
+		<table class="table table-dark table-bordered" id="session">
+		
+			<tr>
+				<th>Session ID</th>
+				<th>For</th>
+				<th>Start Time</th>
+				<th>End Time</th>
+				<th>Current Capacity</th>
+				<th>Maximum Capacity</th>
+				<th>Add OR Remove</th>
+			</tr>
+		
+		<%
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery("SELECT * FROM session WHERE Club_Id = '" + session_Club_Id + "' ORDER BY Team_Member DESC");
+		
+		try{
+		
+		if(rs.next()) {
+			
+			%>
+			<tr>
+			
+				<td>
+					<input class="form-control" type="text" name="sessionid1" value="<%= rs.getString(2) %>" readOnly>
+					<input class="form-control" type="hidden" name="sessionno1" value="<%= rs.getString(1) %>" >
+				</td>
+				<!-- <td>
+					<select>
+						<option value="Team">Team</option>
+						<option value="Member">Member</option>
+					</select>
+				</td>-->
+				 <td><input class="form-control" type="text" name="forwhom1" value="<%= rs.getString(5) %>" required></td>
+				<td><input class="form-control" type="text" name="start1" value="<%= rs.getString(3) %>" required></td>
+				<td><input class="form-control" type="text" name="end1" value="<%= rs.getString(4) %>" required></td>
+				<td><input class="form-control" type="text" name="currentcap1" value="<%= rs.getInt(7) %>" readOnly></td>
+				<td><input class="form-control" type="text" name="maxc1" value="<%= rs.getInt(8) %>" required></td>
+				<td><input class="btn btn-warning" type="button" name="add" id="add" value="ADD" onclick = "addViews()"></td>
+			</tr>
+			
+		<%
+		
+		}
+		int i, flag=0;
+		
+		int count = Integer.parseInt(request.getParameter("count"));
+		
+		for(i=2; i < count+1; i++)
+		{
+			if(rs.next()){
+						%>
+						
+						<tr>
+							<td>
+								<input class="form-control" type="text" name="sessionid<%= i %>" value="<%= rs.getString(2) %>" readOnly>
+								<input class="form-control" type="hidden" name="sessionno<%= i %>" value="<%= rs.getString(1) %>" >
+							</td>
+							<td><input class="form-control" type="text" name="forwhom<%= i %>" value="<%= rs.getString(5) %>" required></td>
+							<td><input class="form-control" type="text" name="start<%= i %>" value="<%= rs.getString(3) %>" required></td>
+							<td><input class="form-control" type="text" name="end<%= i %>" value="<%= rs.getString(4) %>" required></td>
+							<td><input class="form-control" type="text" name="currentcap<%= i %>" value="<%= rs.getInt(7) %>" readOnly></td>
+							<td><input class="form-control" type="text" name="maxc<%= i %>" value="<%= rs.getInt(8) %>" required></td>
+							<!-- <td><input class="btn btn-warning" type="button" value="ADD" onclick = "addViews()"></td> -->
+							<td><input class="btn btn-warning" type="button" value="REMOVE" onclick = "removeViews()"></td>
+						</tr>
+						
+						<%
+				}
+				else{
+					System.out.println(i);
+							%>
+							
+							<tr>
+								<td>
+									<input class="form-control" type="text" name="sessionid<%= i %>" readOnly>
+									<input class="form-control" type="hidden" name="sessionno<%= i %>" >
+								</td>
+								<td><input class="form-control" type="text" name="forwhom<%= i %>" required></td>
+								<td><input class="form-control" type="text" name="start<%= i %>" required></td>
+								<td><input class="form-control" type="text" name="end<%= i %>" required></td>
+								<td><input class="form-control" type="text" name="currentcap<%= i %>" readOnly></td>
+								<td><input class="form-control" type="text" name="maxc<%= i %>" required></td>
+								<!-- <td><input class="btn btn-warning" type="button" value="ADD" onclick = "addViews()"></td> -->
+								<td><input class="btn btn-warning" type="button" value="REMOVE" onclick = "removeViews()"></td>
+							</tr>
+							
+							<%
+						
+				}
+			}
+		}
+		
+		catch(Exception e){
+			System.out.println(e+"bhbhh");
+		}
+					 
+					 
+	}
+		
+	
+	%>	
+		</table>
+		<input class="btn btn-success"  type="submit" name="save" id="save" value="SAVE">
+		<input class="btn btn-success"  type="button" name="reset" id="reset" value="RESET" onclick = "resetViews()">
+	</form>
+
+     
+      </div>
 
       </div>
       <!-- edit-profile-container -->
@@ -291,4 +400,42 @@ if(rs1.next())
   <!-- Template Main JS File -->
   <script src="./assets/scripts.js"></script>
 </body>
+
+<script>
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const getCount = urlParams.get('count');
+
+localStorage.setItem('session_count', getCount);
+/*if(!count) 
+{
+	count = 0;
+}*/
+var count = localStorage.getItem('session_count');
+
+function redirect123(){
+	localStorage.setItem('session_count', count);
+	window.location.href = "coach_profile.jsp?count="+count;
+}
+
+function addViews() 
+{
+  localStorage.setItem('session_count', ++count);
+  window.location = "coach_profile.jsp?count="+count;
+}
+
+function removeViews() 
+{
+  localStorage.setItem('session_count', --count);
+  window.location.href = "coach_profile.jsp?count="+count;
+}
+
+function resetViews() 
+{
+  localStorage.setItem('session_count', 0);
+  window.location.href = "coach_profile.jsp?count="+count;
+}
+
+document.getElementById("addremove-form").action =  "practise_session_operations.jsp?count="+count;
+</script>
 </html>
