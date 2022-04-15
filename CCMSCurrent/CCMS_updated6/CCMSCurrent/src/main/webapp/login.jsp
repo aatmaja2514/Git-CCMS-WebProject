@@ -36,7 +36,7 @@
 //current
   	String url = "jdbc:mysql://localhost:3306/ccms";
 	String user = "root";
-	String pwd = "271879";
+	String pwd = "amj@2514";
 	
 	Class.forName("com.mysql.cj.jdbc.Driver");
 	
@@ -53,12 +53,10 @@
 	      
 	      SimpleDateFormat sdformat = new SimpleDateFormat("E, MMM dd yyyy h:mm a");
 	      Date d2 = sdformat.parse(datetime);
-
 	      Calendar cal = Calendar.getInstance();
 	      Date current_date = sdformat.parse(sdformat.format(new Date()));
 	      String current_date1 = sdformat.format(cal.getTime());
 	      current_date = sdformat.parse(current_date1);
-
 	      if (d2.compareTo(current_date) < 0) 
 	      {
 	    	  Statement stg5 = con.createStatement();
@@ -72,9 +70,6 @@
   }catch(Exception e){
 	  System.out.println(e);
   }
-
-
-
 %>
  <header id="header" class="d-flex align-items-center">
     <div class="container d-flex align-items-center justify-content-between">
@@ -247,10 +242,8 @@
 						 <%}
 						
 					}
-
 					else if(cmta.equals("admin"))
 					{
-
 						String check_login = "Select Email,Password from admin where Email = ? AND Password = ?";
 						 PreparedStatement pst1 = con.prepareStatement(check_login);
 						 pst1.setString(1, email);
@@ -360,7 +353,7 @@
           </div>
           <div class="input-field" id="contact-div">
             <i class="bi bi-telephone-fill"></i>
-            <input name = "contact" onblur="validate_con()" type="text" placeholder="Contact" required/>
+            <input name = "contact" onblur="validate_con()" id="con" type="text" placeholder="Contact" required/>
           </div>
           
           <div class="input-field" id="age-div">
@@ -369,12 +362,12 @@
           </div>
           <div class="input-field" id="pwd-div">
             <i class="bi bi-lock-fill"></i>
-            <input name = "pass" onclick="passowrdPlaceholder()" type="password" placeholder="Password" required/>
+            <input name = "pass" onclick="passowrdPlaceholder()" id="pass1" type="password" placeholder="Password" required/>
           </div>
           
           <div class="input-field">
             <i class="bi bi-lock-fill"></i>
-            <input type="password" name = "re-pass" placeholder="Re-enter Password" required/>
+            <input type="password" name = "re-pass" onblur="validatePass()" id="pass2" placeholder="Re-enter Password" required/>
           </div>
           <input type="submit" class="btn" value="Register Me" /><br>
           
@@ -450,19 +443,41 @@
 </body>
 
 <!-- ANIMATION -->
-
+<script>
+	function validate_con(){
+		/* alert("working"); */
+		var con = document.getElementById("con").value;
+		if(con.length < 10  || con.length > 10){
+			alert("Please Enter valid contact Number");
+			return false;
+		}
+		return true;
+	}
+	function validatePass(){
+		var pass1 = document.getElementById("pass1").value;
+		var pass2 = document.getElementById("pass2").value;
+		if(pass1 != pass2){
+			alert("Password not matched!!");
+			return false;
+		}
+		return true;
+	}
+	/* function validateRegForm(){
+		alert("working");
+		var contact = document.getElementById("")
+	} */
+</script>
 <script>
   const sign_in_btn = document.querySelector("#sign-in-btn");
   const sign_up_btn = document.querySelector("#sign-up-btn");
   const container = document.querySelector(".login-container");
-
   sign_up_btn.addEventListener("click", () => {
     container.classList.add("sign-up-mode");
   });
-
   sign_in_btn.addEventListener("click", () => {
     container.classList.remove("sign-up-mode");
   });
 </script>
 
 </html>
+
