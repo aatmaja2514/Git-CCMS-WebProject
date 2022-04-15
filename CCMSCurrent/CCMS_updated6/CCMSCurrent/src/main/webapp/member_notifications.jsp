@@ -33,7 +33,7 @@
 <%
   	String url = "jdbc:mysql://localhost:3306/ccms";
 	String user = "root";
-	String pwd = "271879";
+	String pwd = "amj@2514";
 	
 	Class.forName("com.mysql.cj.jdbc.Driver");
 	
@@ -294,8 +294,8 @@
 			        									                     {
 			        				        	                            	
 			        				        	                            %>
-			        				        	                            <td><button type="submit"><a href = "team_approval.jsp?member_id=<%= includestrArray[i] %>&status=approved&ch_id=<%= rs55.getString(2) %>"><i class="bi bi-check"></i> Accept</a></button></td>
-			        									                    <td><button type="submit"><a href = "team_approval.jsp?member_id=<%= includestrArray[i] %>&status=disapproved&ch_id=<%= rs55.getString(2) %>""><i class="bi bi-x"></i> Reject</a></button></td>
+			        				        	                            <td><button type="submit"><a href = "#" onclick="confirm('Are you sure you want to accept the challenge?')"><i class="bi bi-check"></i> Accept</a></button></td>
+			        									                    <td><button type="submit"><a href = "#" onclick="confirm('Are you sure you want to reject the challenge?')"><i class="bi bi-x"></i> Reject</a></button></td>
 			        									                    <%
 			        									                    }
 			        									                    %>
