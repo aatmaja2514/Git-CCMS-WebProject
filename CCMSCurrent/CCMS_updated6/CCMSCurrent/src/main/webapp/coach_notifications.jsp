@@ -32,7 +32,7 @@
 <%
   	String url = "jdbc:mysql://localhost:3306/ccms";
 	String user = "root";
-	String pwd = "271879";
+	String pwd = "amj@2514";
 	
 	Class.forName("com.mysql.cj.jdbc.Driver");
 	
@@ -236,8 +236,11 @@
 					                      <td><%= rs.getString(4) %></td>
 					                      <td><%= rs.getString(5) %></td>
 					                      
-					                      <td><a href = "coach_member_request_to_participate.jsp?accept_challengeid=<%= rs.getString(6) %>&noti_no=<%= rs.getString(7) %>&mem_id=<%= rs.getString(8) %>"><i class="bi bi-check"></i> Let play </a></td>
-								          <td><a href = "coach_member_request_to_participate.jsp?reject_challengeid=<%= rs.getString(6) %>&noti_no=<%= rs.getString(7) %>&mem_id=<%= rs.getString(8) %>"><i class="bi bi-x"></i> Reject </a></td>
+					                      <%-- <td><a href = "coach_member_request_to_participate.jsp?accept_challengeid=<%= rs.getString(6) %>&noti_no=<%= rs.getString(7) %>&mem_id=<%= rs.getString(8) %>"><i class="bi bi-check"></i> Let play </a></td>
+								          <td><a href = "coach_member_request_to_participate.jsp?reject_challengeid=<%= rs.getString(6) %>&noti_no=<%= rs.getString(7) %>&mem_id=<%= rs.getString(8) %>"><i class="bi bi-x"></i> Reject </a></td> --%>
+								          
+								          <td><a href = "#" onclick="confirm('Are you sure you want to play this member?')"><i class="bi bi-check"></i> Let play </a></td>
+								          <td><a href = "#" onclick="confirm('Are you sure you want to reject the request?')"><i class="bi bi-x"></i> Reject </a></td>
 					                    </tr>
 				          				
 				          			<%
