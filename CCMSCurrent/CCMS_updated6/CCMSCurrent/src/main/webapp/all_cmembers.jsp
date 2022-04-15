@@ -29,7 +29,7 @@
 <%
   	String url = "jdbc:mysql://localhost:3306/ccms";
 	String user = "root";
-	String pwd = "271879";
+	String pwd = "amj@2514";
 	
 	Class.forName("com.mysql.cj.jdbc.Driver");
 	
@@ -150,16 +150,16 @@
                         if(rs4.getString(6).equals("T"))
                         {%>
                         	<td>In Team</td>
-                    		<td><button type="submit" name = "delete_from_team"><a href = "team_operations.jsp?del_id=<%= rs4.getString(7) %>"><i class="bi bi-x"></i> Delete</a></button></td>
+                    		<td><button type="submit" name = "delete_from_team"><a href = "#" onclick="confirm('Are you sure you want to delete <%= rs4.getString(1) %> member from the team?')"><i class="bi bi-x"></i> Delete</a></button></td>
                     		<td><button type="submit"><a href = "team_operations.jsp?del_member_id=<%= rs4.getString(7) %>"><i class="bi bi-dash-circle"></i></a></button></td>
                       <% }
                         else
                         {%>
                         	<td>
-                        		<button type="submit" name = "add_to_team"><a href = "team_operations.jsp?add_id=<%= rs4.getString(7) %>"><i class="bi bi-check-lg"></i> Add</a></button>
+                        		<button type="submit" name = "add_to_team"><a href = "#" onclick="confirm('Are you sure you want to add <%= rs4.getString(1) %> member in the team?')"><i class="bi bi-check-lg"></i> Add</a></button>
                         	</td>
                 			<td>Not in Team</td>
-                			<td><button type="submit"><a href = "team_operations.jsp?del_member_id=<%= rs4.getString(7) %>"><i class="bi bi-dash-circle"></i></a></button></td>
+                			<td><button type="submit"><a href = "#" onclick="confirm('Are you sure you want to remove <%= rs4.getString(1) %> member from the team?')"><i class="bi bi-dash-circle"></i></a></button></td>
                         <%}
                         
                         %>
